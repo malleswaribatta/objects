@@ -24,8 +24,10 @@ const information = [
   ["Jack", "0198765431", 37, "707 Spruce Court, Twin Peaks"]
 ]
 
-const isAgeGreaterThan20 = function (details) {
-  return details[2] > 20 ;
+const isAgeGreaterThan20 = function (personDetails) {
+  const age = personDetails[2];
+  
+  return age > 20 ;
 }
 
 const getDetails = function () {
