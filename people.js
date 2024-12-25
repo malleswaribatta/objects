@@ -115,7 +115,7 @@ const countOfCurrentlyEmployed = function (people) {
   return people.filter(({ employement }) => employement).length;
 };
 
-// console.log(countOfCurrentlyEmployed(people));
+console.log(countOfCurrentlyEmployed(people));
 
 //---2
 const countOfPeopleOwnsCar = function () {
