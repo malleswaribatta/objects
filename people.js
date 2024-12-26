@@ -100,47 +100,35 @@ const people = [
 
 //---**Hypothetical Questions:**---
 
-// const countOfCurrentlyEmployed = function (people) {
-//   return people.reduce(function (count, person) {
-//     return person.employement ? count + 1 : count;
-//   }, 0);
-// };
 const pets = people.flatMap(({ pets }) => pets);
 
 const peopleOwnsCar = (people) =>
   people.filter(({ vehiles }) => vehiles.includes("car"));
 
 //---1
-const countOfCurrentlyEmployed = function (people) {
-  return people.filter(({ employement }) => employement).length;
-};
+const countOfCurrentlyEmployed = (people) =>
+  people.filter(({ employement }) => employement).length;
 
-console.log(countOfCurrentlyEmployed(people));
+// console.log(countOfCurrentlyEmployed(people));
 
 //---2
-const countOfPeopleOwnsCar = function () {
-  return peopleOwnsCar.length;
-};
+const countOfPeopleOwnsCar = peopleOwnsCar.length;
 
-// console.log(countOfPeopleOwnsCar());
+// console.log(countOfPeopleOwnsCar);
 
 //---3
-const countOfPetsFullyVaccinated = function (people) {
-  return people
-    .flatMap(({ pets }) => pets)
-    .filter(({ fullyVaccinated }) => fullyVaccinated).length;
+const countOfPetsFullyVaccinated = function () {
+  return pets.filter(({ fullyVaccinated }) => fullyVaccinated).length;
 };
 
-// console.log(countOfPetsFullyVaccinated(people));
+// console.log(countOfPetsFullyVaccinated());
 
 //---4
-const nameAndTypeOfCorrespondingPet = function (people) {
-  const pets = people.flatMap(({ pets }) => pets);
-
+const nameAndTypeOfCorrespondingPet = function () {
   return pets.map(({ name, type }) => ({ petName: name, petType: type }));
 };
 
-// console.log(nameAndTypeOfCorrespondingPet(people));
+// console.log(nameAndTypeOfCorrespondingPet());
 
 //---5
 const cities = people.map(({ city }) => city);
@@ -167,8 +155,9 @@ const hobbiesAndCountOfHobbies = function (people) {
 
 //----7
 const countOfPetsBelongToUnemployed = function (people) {
-  return people.filter(({ employement }) => employement).map(({ pets }) => pets)
-    .length;
+  return people
+    .filter(({ employement }) => !employement)
+    .map(({ pets }) => pets).length;
 };
 
 // console.log(countOfPetsBelongToUnemployed(people));
@@ -189,24 +178,21 @@ const countOfCSPeopleAndTheirPets = function (people) {
     (person) => person.study === "computer science"
   );
 
-  const petsCount = CSPeople.reduce(
-    (count, person) => count + person.pets.length,
-    0
+  const CountOfCSPeopleWhoHavePets = CSPeople.filter(
+    (person) => person.pets.length > 0
   );
 
   return {
     countOfCoumputerSciencePeople: CSPeople.length,
-    countOfPets: petsCount,
+    CSPeopleWhoHavePets: CountOfCSPeopleWhoHavePets.length,
   };
 };
 
-// console.log(countOfCSPeopleAndTheirPets(people));
+console.log(countOfCSPeopleAndTheirPets(people));
 
 //---10
 const countOfPeopleHavingMoreThanOnePet = function (people) {
-  const moreThanOnePet = people.filter((person) => person.pets.length > 2);
-
-  return moreThanOnePet.length;
+  return people.filter((person) => person.pets.length > 2).length;
 };
 
 // console.log(countOfPeopleHavingMoreThanOnePet(people));
@@ -216,12 +202,12 @@ const petsAndTheirLikes = function () {
     ({ favActivity }) => favActivity.length !== 0
   );
 
-  return petsHasLikes.map(function ({ name, favActivity }) {
-    return [name, favActivity.join("")];
+  return petsHasLikes.map(function ({ name }) {
+    return name;
   });
 };
 
-// console.log(petsAndTheirLikes(people));
+console.log(petsAndTheirLikes(people));
 
 //12
 const namesOfPets = function (people) {
@@ -258,7 +244,6 @@ const getNoOfpets = (object, { type }) => {
 
 const commonTypePetInGroup = function () {
   const petsOccurences = Object.entries(pets.reduce(getNoOfpets, {}));
-  console.log(petsOccurences);
   const commonPet = petsOccurences.reduce((pet1, pet2) =>
     pet1[1] > pet2[1] ? pet1 : pet2
   );
@@ -266,39 +251,36 @@ const commonTypePetInGroup = function () {
   return commonPet[0];
 };
 
-console.log(commonTypePetInGroup());
+// console.log(commonTypePetInGroup());
 
 //15
 const countOfPeopleHasMoreThanTwoHobbies = function (people) {
-  const peopleHasMoreThanTwoHobbies = people.filter(
-    ({ hobbies }) => hobbies.length > 2
-  );
-
-  return peopleHasMoreThanTwoHobbies.length;
+  return people.filter(({ hobbies }) => hobbies.length > 2).length;
 };
 
-console.log(countOfPeopleHasMoreThanTwoHobbies(people));
+// console.log(countOfPeopleHasMoreThanTwoHobbies(people));
 
 //17
 const youngestPet = function () {
-  const littlePet = pets.reduce(function (min, pet) {
-    return min < pet.age ? min : pet;
-  }, Infinity);
-
-  return { pet: littlePet.name, age: littlePet.age };
+  return pets.reduce((pet1, pet2) => (pet1.age < pet2.age ? pet1 : pet2)).name;
 };
 
-// console.log(youngestPet(people));
+// console.log(youngestPet());
 
 //18
 
 const booksReadByPeople = function (people) {
-  const readers = people.filter(({ reading }) => reading.length !== 0);
+  const readers = people.map((person) => {
+    return person.hobbies
+      .map(({ type }) => (type === "reading" ? person : []))
+      .flat();
+  });
+  console.log(readers);
 
   return readers.map((reader) => [reader.name, reader.reading]);
 };
 
-// console.log(booksReadByPeople(people));
+console.log(booksReadByPeople(people));
 
 //19
 const countOfcitiesStartsWithB = function (people) {
