@@ -4,8 +4,8 @@ const people = [
     age: 24,
     city: "Pune",
     hobbies: [
-      { type: "playing", details: ["chess"] },
-      { type: "gardening", details: "gardening" },
+      { type: "playing", details: "chess" },
+      { type: "gardening", details: "" },
     ],
     pets: [
       {
@@ -17,7 +17,7 @@ const people = [
         favActivity: ["fetch"],
       },
     ],
-    vehiles: ["car"],
+    vehicles: ["car"],
     employement: true,
     profession: "software engineer",
     study: "computer science",
@@ -26,7 +26,7 @@ const people = [
     name: "Ananya",
     age: 30,
     city: "Bangalore",
-    hobbies: [{ type: "cooking" }],
+    hobbies: [{ type: "cooking", details: "Italian recipes" }],
     pets: [
       {
         name: "kiwi",
@@ -37,7 +37,7 @@ const people = [
         favActivity: ["mimics"],
       },
     ],
-    vehiles: [],
+    vehicles: [],
     employement: false,
     profession: undefined,
     study: "computer science",
@@ -48,7 +48,7 @@ const people = [
     city: "Jaipur",
     hobbies: [
       { type: "gardening", details: "rose gardening" },
-      { type: "reading", details: "reading historical fiction" },
+      { type: "reading", details: "historical fiction" },
     ],
     pets: [
       {
@@ -68,7 +68,7 @@ const people = [
         favActivity: ["lounging in sun"],
       },
     ],
-    vehiles: [],
+    vehicles: [],
     employement: true,
     profession: "business",
     study: undefined,
@@ -79,7 +79,7 @@ const people = [
     city: "Chennai",
     hobbies: [
       { type: "reading", details: "modern fantasy novels" },
-      { type: "waching", details: "binge-watching sci-fi shows " },
+      { type: "watching", details: "binge-watching sci-fi shows " },
     ],
     pets: [
       {
@@ -91,7 +91,7 @@ const people = [
         favActivity: ["backyard", "nibbling on carrots"],
       },
     ],
-    vehiles: [],
+    vehicles: [],
     employement: false,
     profession: "dancer",
     study: undefined,
@@ -100,10 +100,7 @@ const people = [
 
 //---**Hypothetical Questions:**---
 
-const pets = people.flatMap(({ pets }) => pets);
-
-const peopleOwnsCar = (people) =>
-  people.filter(({ vehiles }) => vehiles.includes("car"));
+const pets = (people) => people.flatMap(({ pets }) => pets);
 
 //---1
 const countOfCurrentlyEmployed = (people) =>
@@ -112,20 +109,25 @@ const countOfCurrentlyEmployed = (people) =>
 // console.log(countOfCurrentlyEmployed(people));
 
 //---2
+const peopleOwnsCar = (people) =>
+  people.filter(({ vehicles }) => vehicles.includes("car"));
 const countOfPeopleOwnsCar = peopleOwnsCar.length;
 
 // console.log(countOfPeopleOwnsCar);
 
 //---3
-const countOfPetsFullyVaccinated = function () {
-  return pets.filter(({ fullyVaccinated }) => fullyVaccinated).length;
+const countOfFullyVaccinatedPets = function () {
+  return pets(people).filter(({ fullyVaccinated }) => fullyVaccinated).length;
 };
 
 // console.log(countOfPetsFullyVaccinated());
 
 //---4
-const nameAndTypeOfCorrespondingPet = function () {
-  return pets.map(({ name, type }) => ({ petName: name, petType: type }));
+const nameAndTypeOfPets = function () {
+  return pets(people).map(({ name, type }) => ({
+    petName: name,
+    petType: type,
+  }));
 };
 
 // console.log(nameAndTypeOfCorrespondingPet());
@@ -174,12 +176,10 @@ const averageAge = function (people) {
 
 //---9--- CS --> compute science
 const countOfCSPeopleAndTheirPets = function (people) {
-  const CSPeople = people.filter(
-    (person) => person.study === "computer science"
-  );
+  const CSPeople = people.filter(({ study }) => study === "computer science");
 
   const CountOfCSPeopleWhoHavePets = CSPeople.filter(
-    (person) => person.pets.length > 0
+    ({ pets }) => pets.length > 0
   );
 
   return {
@@ -188,51 +188,51 @@ const countOfCSPeopleAndTheirPets = function (people) {
   };
 };
 
-console.log(countOfCSPeopleAndTheirPets(people));
+// console.log(countOfCSPeopleAndTheirPets(people));
 
 //---10
-const countOfPeopleHavingMoreThanOnePet = function (people) {
-  return people.filter((person) => person.pets.length > 2).length;
-};
+const countOfPeopleHavingMoreThanOnePet = (people) =>
+  people.filter(({ pets }) => pets.length > 2).length;
 
 // console.log(countOfPeopleHavingMoreThanOnePet(people));
 
-const petsAndTheirLikes = function () {
-  const petsHasLikes = pets.filter(
+//---11
+const petsAndTheirLikes = function (people) {
+  const petsHasLikes = pets(people).filter(
     ({ favActivity }) => favActivity.length !== 0
   );
 
-  return petsHasLikes.map(function ({ name }) {
-    return name;
-  });
+  return petsHasLikes.map(({ name }) => name);
 };
 
-console.log(petsAndTheirLikes(people));
+// console.log(petsAndTheirLikes(people));
 
 //12
 const namesOfPets = function (people) {
-  const peopleBelongsToBangOrChannai = people.filter(({ city }) =>
+  const peopleOfBangaloreOrChennai = people.filter(({ city }) =>
     ["Bangalore", "Chennai"].includes(city)
   );
 
-  const pets = peopleBelongsToBangOrChannai.flatMap((person) => person.pets);
+  const pets = peopleOfBangaloreOrChennai.flatMap(({ pets }) => pets);
   return pets.map(({ name }) => name);
 };
 
 // console.log(namesOfPets(people));
 
 //13
-const countOfVaccinatedPets = function () {
-  const pets = peopleOwnsCar(people).flatMap(({ pets }) => pets);
+const countOfVaccinatedPets = function (people) {
+  const peopleNotOwnsCar = () =>
+    people.filter(({ vehicles }) => !vehicles.includes("car"));
+  const pets = peopleNotOwnsCar().flatMap(({ pets }) => pets);
   const vaccinatedPets = pets.filter(({ vaccinated }) => vaccinated);
 
   return vaccinatedPets.length;
 };
 
-// console.log(countOfVaccinatedPets());
+// console.log(countOfVaccinatedPets(people));
 
 //14
-const getNoOfpets = (object, { type }) => {
+const getPetsOccrences = (object, { type }) => {
   if (!(type in object)) {
     object[type] = 0;
   }
@@ -243,7 +243,7 @@ const getNoOfpets = (object, { type }) => {
 };
 
 const commonTypePetInGroup = function () {
-  const petsOccurences = Object.entries(pets.reduce(getNoOfpets, {}));
+  const petsOccurences = Object.entries(pets.reduce(getPetsOccrences, {}));
   const commonPet = petsOccurences.reduce((pet1, pet2) =>
     pet1[1] > pet2[1] ? pet1 : pet2
   );
@@ -262,25 +262,27 @@ const countOfPeopleHasMoreThanTwoHobbies = function (people) {
 
 //17
 const youngestPet = function () {
-  return pets.reduce((pet1, pet2) => (pet1.age < pet2.age ? pet1 : pet2)).name;
+  return pets(people).reduce((pet1, pet2) =>
+    pet1.age < pet2.age ? pet1 : pet2
+  ).name;
 };
 
-// console.log(youngestPet());
+// console.log(youngestPet(people));
 
 //18
 
-const booksReadByPeople = function (people) {
-  const readers = people.map((person) => {
-    return person.hobbies
-      .map(({ type }) => (type === "reading" ? person : []))
-      .flat();
-  });
-  console.log(readers);
+// const booksReadByPeople = function (people) {
+//   const readers = people.filter(({ hobbies }) =>
+//     hobbies.map((d) => d.type).includes("reading")
+//   );
+//   const hobbies = readers.flatMap(({ hobbies }) =>
+//     hobbies.filter(({ type }) => type === "reading")
+//   );
+//   console.log(hobbies);
+//   // return readers.map(({ name}) => ({ name: name, hobbies.}));
+// };
 
-  return readers.map((reader) => [reader.name, reader.reading]);
-};
-
-console.log(booksReadByPeople(people));
+// console.log(booksReadByPeople(people));
 
 //19
 const countOfcitiesStartsWithB = function (people) {
